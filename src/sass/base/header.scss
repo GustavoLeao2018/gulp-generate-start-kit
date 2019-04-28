@@ -1,0 +1,10 @@
+$color-background-header: #ffc107;
+$color-text-header: #000;
+
+header {
+    margin: 16px;
+    padding: 16px;
+    background-color: $color-background-header;
+    color: $color-text-header;
+    border-radius: 7px;
+}

@@ -1,0 +1,13 @@
+$color-background-footer: #ffc107;
+$color-text-footer: #000;
+$color-hr-footer: #000;
+
+footer  { 
+    padding: 16px; 
+    background-color: $color-background-footer; 
+    color: $color-text-footer;   
+}
+
+hr {
+    border-top: 1px solid $color-hr-footer;
+}
