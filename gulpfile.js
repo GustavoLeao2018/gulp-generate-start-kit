@@ -1,41 +1,54 @@
 /*============[Importando os pacotes]==========
   Pugins do gulp */
-var gulp         = require('gulp');              // gulp
-var sass         = require('gulp-sass');         // sass
-var sourcemaps   = require('gulp-sourcemaps');   // sourcemaps
-var autoprefixer = require('gulp-autoprefixer'); // autoprefixer
-var cleanCss     = require('gulp-clean-css');    // cleanCss
-var uglify       = require('gulp-uglify');       // uglify
-var concat       = require('gulp-concat');       // concat
-var imagemin     = require('gulp-imagemin');     // imagemin
-var changed      = require('gulp-changed');      // changed
-var htmlReplace  = require('gulp-html-replace'); // htmlReplace 
-var htmlMin      = require('gulp-htmlmin');      // htmlMin
+var gulp         = require('gulp');                     // gulp
+var sass         = require('gulp-sass');                // sass
+var sourcemaps   = require('gulp-sourcemaps');          // sourcemaps
+var autoprefixer = require('gulp-autoprefixer');        // autoprefixer
+var cleanCss     = require('gulp-clean-css');           // cleanCss
+var uglify       = require('gulp-uglify');              // uglify
+var concat       = require('gulp-concat');              // concat
+var imagemin     = require('gulp-imagemin');            // imagemin
+var changed      = require('gulp-changed');             // changed
+var htmlReplace  = require('gulp-html-replace');        // htmlReplace 
+var htmlMin      = require('gulp-htmlmin');             // htmlMin
 // Plugins do node
-var del          = require('del');               // del
-var browserSync  = require('browser-sync');      // browserSync
-var runSequence  = require('run-sequence');      // runSequence
-var es           = require('event-stream');      // es
+var del          = require('del');                      // del
+var browserSync  = require('browser-sync');             // browserSync
+var runSequence  = require('run-sequence');             // runSequence
+var es           = require('event-stream');             // es
+var pipeline     = require('readable-stream').pipeline; // pepeline
  
 //============[Arrya de diretorios]=============
 var diretorios = {
     src: 'src/',
+
     htmlin: 'src/*.html',
     htmlviewin: 'src/view/**/*.html',
-    jsin: 'src/js/**/*.js',
+    
     scssin: 'src/sass/**/*.scss',
     scssout: 'src/css/',
-    jsoutname: 'script.min.js',
-    jsout: 'dist/js/',
+    
+    jsin: 'src/js/**/*.js',
     jsreplaceout: 'js/script.min.js',
     jsreplaceoutview: '../js/script.min.js',
-    dist: 'dist/',
-    distview: 'dist/view/',
+    jsoutname: 'script.min.js',
+    jsoutsrc: 'src/js/',
+    jsout: 'dist/js/',
+    
     cssin: 'src/css/**/*.css',
     cssoutname: 'style.min.css',
+    cssoutsrc: 'src/css',
     cssout: 'dist/css',
     cssreplaceout: 'css/style.min.css',
-    cssreplaceoutview: '../css/style.min.css'
+    cssreplaceoutview: '../css/style.min.css',
+
+    dist: 'dist/',
+    distview: 'dist/view/',
+
+    imgin: 'src/img/**/*.{jpg,jpeg,png,gif}',
+    imgout: 'dist/img/',
+    imgoutsrc: 'src/img/'
+    
 };
 
 
@@ -81,19 +94,18 @@ gulp.task('js', () => {
                 manda pra pasta de destino
     */
     return es.merge([
-                gulp.src(diretorios.jsin).pipe(uglify()),
-                gulp.src([
-                            'node_modules/jquery/dist/jquery.min.js',
-                            'node_modules/popper.js/dist/popper.min.js',
-                            'node_modules/bootstrap/dist/js/bootstrap.min.js'
-                ])
-            ])                
-            .pipe(concat(diretorios.jsoutname))
-            .pipe(gulp.dest(diretorios.jsout));
+            gulp.src('node_modules/jquery/dist/jquery.min.js'),
+            gulp.src('node_modules/popper.js/dist/popper.min.js'),
+            gulp.src('node_modules/bootstrap/dist/js/bootstrap.min.js'),
+            gulp.src(diretorios.jsin)
+        ])             
+        .pipe(concat(diretorios.jsoutname))   
+        .pipe(gulp.dest(diretorios.jsoutsrc))   
+        .pipe(gulp.dest(diretorios.jsout));
 });
 
 // Tarefa de css
-gulp.task('css', () => {
+gulp.task('css', ['sass'], () => {
     return  es.merge([    
                     gulp.src([
                         'node_modules/bootstrap/dist/css/bootstrap-reboot.min.css',
@@ -103,11 +115,12 @@ gulp.task('css', () => {
                     gulp.src(diretorios.cssin).pipe(cleanCss())
               ])
               .pipe(concat(diretorios.cssoutname))
+              .pipe(gulp.dest(diretorios.cssoutsrc))
               .pipe(gulp.dest(diretorios.cssout));
 });
 
 // Tarefa html
-gulp.task('html', () => {
+gulp.task('html', ['js', 'css'], () => {
     return es.merge([
             gulp.src(diretorios.htmlin)
                 .pipe(htmlReplace({
@@ -130,7 +143,13 @@ gulp.task('html', () => {
 });
 
 // Tarefa img
-
+gulp.task('img', () => {
+    return gulp.src(diretorios.imgin)
+               .pipe(changed(diretorios.imgout))
+               .pipe(imagemin())
+               .pipe(gulp.dest(diretorios.imgoutsrc))
+               .pipe(gulp.dest(diretorios.imgout));
+});
 
 // Tarefa de limpar dist
 gulp.task('limpar', () => {
@@ -139,7 +158,7 @@ gulp.task('limpar', () => {
 
 // Tarefa build
 gulp.task('build', () => {
-    runSequence('limpar', ['js', 'css', 'html']);
+    runSequence('limpar', ['js', 'css', 'html', 'img']);
 });
 
 // Tarefa Base(default)
