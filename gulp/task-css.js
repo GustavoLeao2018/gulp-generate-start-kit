@@ -1,14 +1,17 @@
+var diretorios   = require('./task-diretorios').module;
+var importacoes  = require('./task-importacoes').module;
+
 // Tarefa de css
-gulp.task('css', ['sass'], () => {
-    return  es.merge([    
-                    gulp.src([
+exports.module = importacoes.gulp.task('css', ['sass'], () => {
+    return  importacoes.es.merge([    
+                    importacoes.gulp.src([
                         'node_modules/bootstrap/dist/css/bootstrap-reboot.min.css',
                         'node_modules/bootstrap/dist/css/bootstrap-grid.min.css',
                         'node_modules/bootstrap/dist/css/bootstrap.min.css'    
                     ]),
-                    gulp.src(diretorios.cssin).pipe(cleanCss())
+                    importacoes.gulp.src(diretorios.cssin).pipe(importacoes.cleanCss())
               ])
-              .pipe(concat(diretorios.cssoutname))
-              .pipe(gulp.dest(diretorios.cssoutsrc))
-              .pipe(gulp.dest(diretorios.cssout));
+              .pipe(importacoes.concat(diretorios.cssoutname))
+              .pipe(importacoes.gulp.dest(diretorios.cssoutsrc))
+              .pipe(importacoes.gulp.dest(diretorios.cssout));
 });

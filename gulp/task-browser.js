@@ -1,16 +1,19 @@
-var diretorios   = require('./task-diretorios');
+var diretorios   = require('./task-diretorios').module;
+var importacoes  = require('./task-importacoes').module;
+
 
 // Tarefa de recarregar 
-gulp.task('recarregar', () => {
-    browserSync.reload();
+exports.module = importacoes.gulp.task('recarregar', () => {
+    importacoes.browserSync.reload();
 });
 
 // Tarefa de servidor
-gulp.task('servidor', ['sass'], () => {
+exports.module = importacoes.gulp.task('servidor', ['sass'], () => {
     // Roda no navegador pegando os arquivos na pasta src
-    browserSync({server: diretorios.src}); 
+    importacoes.browserSync({server: diretorios.src}); 
 
     // Fica esperando e chamando as funções necessárias 
-    gulp.watch([diretorios.htmlin, diretorios.jsin], ['recarregar']); // Regarrega o browser
-    gulp.watch(diretorios.scssin, ['sass']); // Compila os arquivos sass
+    importacoes.gulp.watch([diretorios.htmlin, diretorios.jsin], ['recarregar']); // Regarrega o browser
+    importacoes.gulp.watch(diretorios.scssin, ['sass']); // Compila os arquivos sass
 });
+

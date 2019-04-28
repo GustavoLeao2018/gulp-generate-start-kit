@@ -30,3 +30,5 @@ var diretorios = {
     
 };
 
+exports.module = diretorios;
+

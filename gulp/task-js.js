@@ -1,5 +1,8 @@
+var diretorios   = require('./task-diretorios').module;
+var importacoes  = require('./task-importacoes').module;
+
 // Tarefa de js
-gulp.task('js', () => {
+exports.module = importacoes.gulp.task('js', () => {
     /*
         retorna o resultado de:
             pega o diretório
@@ -7,13 +10,13 @@ gulp.task('js', () => {
                 minifica os arquivos
                 manda pra pasta de destino
     */
-    return es.merge([
-            gulp.src('node_modules/jquery/dist/jquery.min.js'),
-            gulp.src('node_modules/popper.js/dist/popper.min.js'),
-            gulp.src('node_modules/bootstrap/dist/js/bootstrap.min.js'),
-            gulp.src(diretorios.jsin)
+    return importacoes.es.merge([
+            importacoes.gulp.src('node_modules/jquery/dist/jquery.min.js'),
+            importacoes.gulp.src('node_modules/popper.js/dist/popper.min.js'),
+            importacoes.gulp.src('node_modules/bootstrap/dist/js/bootstrap.min.js'),
+            importacoes.gulp.src(diretorios.jsin)
         ])             
-        .pipe(concat(diretorios.jsoutname))   
-        .pipe(gulp.dest(diretorios.jsoutsrc))   
-        .pipe(gulp.dest(diretorios.jsout));
+        .pipe(importacoes.concat(diretorios.jsoutname))   
+        .pipe(importacoes.gulp.dest(diretorios.jsoutsrc))   
+        .pipe(importacoes.gulp.dest(diretorios.jsout));
 });

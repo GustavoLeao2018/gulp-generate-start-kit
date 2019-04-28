@@ -7,7 +7,7 @@ git clone https://github.com/GustavoLeao2018/gulp-generate-start-kit.git
 
 Para instalar os pacotes execute:
 ```bash
-npm install -g gulp gulp-gli 
+npm install -g gulp  
 npm install
 ```
 
